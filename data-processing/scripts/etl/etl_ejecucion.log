@@ -1,0 +1,10 @@
+Creating iot-sueo_etl-influxdb_run ... 
+Creating iot-sueo_etl-influxdb_run ... done
+Conexión exitosa con InfluxDB
+Datos extraídos correctamente (5 filas).
+Se han añadido 5 nuevos registros al archivo /app/datos_salida/sensores_habitacion.csv
+Creating iot-sueo_etl-influxdb_run ... 
+Creating iot-sueo_etl-influxdb_run ... done
+Conexión exitosa con InfluxDB
+Datos extraídos correctamente (5 filas).
+Se han añadido 5 nuevos registros al archivo /app/datos_salida/sensores_habitacion.csv

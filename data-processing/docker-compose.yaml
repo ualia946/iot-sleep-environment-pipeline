@@ -1,0 +1,63 @@
+services:
+  mosquitto:
+    image: eclipse-mosquitto:2.0
+    container_name: mosquitto
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - $PWD/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
+      - $PWD/mosquitto/data:/mosquitto/data
+      - $PWD/mosquitto/log:/mosquitto/log
+    restart: unless-stopped
+    networks:
+      - iot_network
+  
+  influxdb:
+    image: influxdb:2.7
+    container_name: influxdb
+    ports:
+      - "8086:8086"
+    volumes:
+      - $PWD/influxdb/data:/var/lib/influxdb2
+      - $PWD/influxdb/config:/etc/influxdb2
+    restart: unless-stopped
+    networks:
+      - iot_network
+
+  telegraf: 
+    image: telegraf:latest
+    container_name: telegraf
+    depends_on:
+      - influxdb
+      - mosquitto
+    volumes:
+      - $PWD/telegraf/config/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    env_file:
+      - $PWD/telegraf/.env
+    restart: unless-stopped
+    networks:
+      - iot_network
+  
+  etl-influxdb:
+    build:
+      context: ./scripts/etl
+      dockerfile: Dockerfile
+    image: etl-influxdb:latest
+    container_name: etl-influxdb
+    depends_on:
+      - influxdb
+    networks:
+      - iot_network
+    env_file:
+      - $PWD/scripts/etl/.env
+    profiles:
+      - cron_tasks
+    volumes:
+      - $PWD/data:/app/datos_salida
+  
+
+networks:
+  iot_network:
+    driver: bridge
+
