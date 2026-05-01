@@ -1,0 +1,45 @@
+name: Construir y subir imagen docker (ETL)
+
+on:
+    workflow_dispatch:
+    push:
+        branches: [ "main" ]
+        paths:
+            - data-processing/scripts/etl/etl_influxdb.py
+            - data-processing/scripts/etl/Dockerfile
+
+permissions:
+    contents: read
+    packages: write
+
+jobs:
+    build-and-push:
+        runs-on: ubuntu-latest
+        steps:
+
+            - name: Descargar repositorio
+              uses: actions/checkout@v4
+
+            - name: Login en GitHub Container Registry
+              uses: docker/login-action@v3
+              with:
+                registry: ghcr.io
+                username: ${{ github.actor }}
+                password: ${{ secrets.GITHUB_TOKEN }}
+            
+            - name: Generar etiquetas docker
+              id: meta
+              uses: docker/metadata-action@v5
+              with:
+                images: ghcr.io/${{ github.repository }}
+                tags: |
+                  type=raw, value=latest
+                  type=sha
+            
+            - name: Construir y subir imagen
+              uses: docker/build-push-action@v5
+              with:
+                context: data-processing/scripts/etl/
+                push: true
+                tags: ${{ steps.meta.outputs.tags }}
+                labels: ${{ steps.meta.outputs.labels }}
