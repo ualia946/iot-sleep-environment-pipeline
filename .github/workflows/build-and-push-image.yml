@@ -1,6 +1,7 @@
 name: Construir y subir imagen docker (ETL)
 
 on:
+    workflow_dispatch:
     push:
         branches: [ "main" ]
         paths:
