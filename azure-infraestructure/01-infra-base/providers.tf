@@ -9,7 +9,7 @@ terraform {
     resource_group_name = "rg-terraform-state"
     storage_account_name = "stiotsleepive"
     container_name = "tfstate"
-    key = "iot-sleep.terraform.tfstate"
+    key = "iot-sleep-base.terraform.tfstate"
   }
   required_version = ">= 1.1.0"
 }
