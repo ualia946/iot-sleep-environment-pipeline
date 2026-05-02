@@ -1,25 +1,3 @@
-resource "azurerm_log_analytics_workspace" "law" {
-  resource_group_name = azurerm_resource_group.rg.name
-
-  name = "law-iot-sleep"
-  location = azurerm_resource_group.rg.location
-
-  sku = "PerGB2018"
-  retention_in_days = 30
-}
-
-resource "azurerm_container_app_environment" "cae" {
-  resource_group_name = azurerm_resource_group.rg.name
-
-  name = "cae-iot-sleep"
-  location = azurerm_resource_group.rg.location
-
-  logs_destination           = "log-analytics"
-  log_analytics_workspace_id = azurerm_log_analytics_workspace.law.id
-
-  infrastructure_subnet_id = azurerm_subnet.snet_aca.id
-}
-
 resource "azurerm_network_security_group" "nsg_cae" {
   name = "nsg-cae"
   location = azurerm_resource_group.rg.location
@@ -72,5 +50,3 @@ resource "azurerm_subnet_network_security_group_association" "nsg_to_snet" {
   subnet_id                 = azurerm_subnet.snet_aca.id
   network_security_group_id = azurerm_network_security_group.nsg_cae.id
 }
-
-
