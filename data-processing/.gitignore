@@ -2,3 +2,4 @@
 influxdb/data
 /mosquitto/data
 /mosquitto/log
+/mosquitto/certs
